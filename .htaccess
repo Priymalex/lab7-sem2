@@ -1,0 +1,39 @@
+# Скрываем версию PHP
+ServerSignature Off
+ServerTokens Prod
+
+# Отключаем просмотр директорий
+Options -Indexes
+
+# Отключаем удаленное включение файлов
+php_flag allow_url_include Off
+php_flag allow_url_fopen Off
+
+# Защищаем конфигурационные файлы
+<Files "db_config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "csrf.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "sanitize.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Принудительное перенаправление на HTTPS (раскомментировать при наличии SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Заголовки безопасности
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+</IfModule>
